@@ -235,3 +235,46 @@ if pow(g, s, p) == (r * pow(y, e, p)) % p:
     print("Signature valid")
 else:
     print("Signature invalid")
+
+
+#slh
+# SLH-DSA - Educational demonstration
+
+message = input("Enter message: ")
+
+private_key = 10
+public_key = 10
+
+# Generate signature
+signature = (sum(ord(ch) for ch in message) + private_key) % 1000
+
+print("Digital Signature:", signature)
+
+# Verify signature
+check = (sum(ord(ch) for ch in message) + public_key) % 1000
+
+if signature == check:
+    print("Signature Verified")
+else:
+    print("Invalid Signature")
+
+#ml
+# ML-DSA - Educational demonstration
+
+message = input("Enter message: ")
+
+private_key = 7
+public_key = 7
+
+# Signing
+signature = (sum(ord(ch) for ch in message) + private_key) % 1000
+
+print("Digital Signature:", signature)
+
+# Verification
+check = (sum(ord(ch) for ch in message) + public_key) % 1000
+
+if signature == check:
+    print("Signature Verified")
+else:
+    print("Invalid Signature")

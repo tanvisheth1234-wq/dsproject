@@ -145,29 +145,59 @@ print("Encrypted text:", encrypted)
 
 #Hill Cipher
 
-text = input("Enter 2-letter plaintext: ").upper()
 
-a = ord(text[0]) - 65
-b = ord(text[1]) - 65
+def mod_inverse(a):
+    for i in range(26):
+        if (a * i) % 26 == 1:
+            return i
+    return -1
 
-# Key matrix
-k1, k2 = 3, 3
-k3, k4 = 2, 5
 
-# Encryption
-c1 = (k1*a + k2*b) % 26
-c2 = (k3*a + k4*b) % 26
+def encrypt(text, key):
+    text = text.upper().replace(" ", "")
 
-encrypted = chr(c1 + 65) + chr(c2 + 65)
-print("Encrypted text:", encrypted)
+    if len(text) % 2 != 0:
+        text += "X"
 
-# Decryption
-det = (k1*k4 - k2*k3) % 26
-inv = 9  # Modular inverse of 9 is 3
+    result = ""
 
-d1 = (inv * (k4*c1 - k2*c2)) % 26
-d2 = (inv * (-k3*c1 + k1*c2)) % 26
+    for i in range(0, len(text), 2):
+        x = ord(text[i]) - 65
+        y = ord(text[i+1]) - 65
 
-decrypted = chr(d1 + 65) + chr(d2 + 65)
-print("Decrypted text:", decrypted)
+        c1 = (key[0][0]*x + key[0][1]*y) % 26
+        c2 = (key[1][0]*x + key[1][1]*y) % 26
+
+        result += chr(c1+65) + chr(c2+65)
+
+    return result
+
+
+def decrypt(text, key):
+    a, b = key[0]
+    c, d = key[1]
+
+    det = (a*d - b*c) % 26
+    inv = mod_inverse(det)
+
+    if inv == -1:
+        return "Invalid key"
+
+    inverse_key = [
+        [d*inv % 26, -b*inv % 26],
+        [-c*inv % 26, a*inv % 26]
+    ]
+
+    return encrypt(text, inverse_key)
+
+
+key = [[3, 3], [2, 5]]
+
+text = input("Enter plaintext: ")
+
+cipher = encrypt(text, key)
+
+print("Encrypted text:", cipher)
+print("Decrypted text:", decrypt(cipher, key))
+
 
